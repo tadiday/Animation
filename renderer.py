@@ -19,7 +19,6 @@ class Renderer:
             for face, normal in zip(mesh.faces, mesh.normals):
                 # Get world coordinates of face vertices
                 world_verts = [mesh.transform.apply_to_point(mesh.verts[i]) for i in face]
-
                 # Project vertices to screen space
                 camera_verts = [self.camera.project_point(v) for v in world_verts]
                 # device to screen coordinate transformation
@@ -131,8 +130,38 @@ class Renderer:
                                     A = [c * mesh.ka  for c in ambient_light]
 
                                     shader = (A + D + S) * 255
+                                elif shading == "texture":
+                                    
+                                    uv = alpha * mesh.uvs[face[0]] + beta * mesh.uvs[face[1]] + lam * mesh.uvs[face[2]]
+                                    u = int(uv[0] * mesh.texture.shape[1]) - 1
+                                    v = int(abs(uv[1] - 1) * mesh.texture.shape[0]) - 1
+
+                                    
+                                    r = mesh.texture[v][u][0]
+                                    g = mesh.texture[v][u][1]
+                                    b = mesh.texture[v][u][2]
+
+                                    shader = [r,g,b]
+
+                                elif shading == "texture-correct":
+                                
+                                    w0 = 1/self.camera.inverse_project_w(np.array(screen_verts[0]))
+                                    w1 = 1/self.camera.inverse_project_w(np.array(screen_verts[1]))
+                                    w2 = 1/self.camera.inverse_project_w(np.array(screen_verts[2]))
+
+                                    w = alpha * w0 + beta * w1 + lam * w2
+                                    uv = alpha * mesh.uvs[face[0]]*w0 + beta * mesh.uvs[face[1]]*w1 + lam * mesh.uvs[face[2]]*w2
+                                    u = int((uv[0]/w * mesh.texture.shape[1]) - 1)
+                                    v = int(abs(uv[1]/w - 1) * mesh.texture.shape[0]) - 1
+
+                                    r = mesh.texture[v][u][0]
+                                    g = mesh.texture[v][u][1]
+                                    b = mesh.texture[v][u][2]
+
+                                    shader = [r,g,b]
 
                                 image_buffer[x, y] = shader
+                                
         self.screen.draw(image_buffer)
 
 
