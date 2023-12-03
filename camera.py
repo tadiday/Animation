@@ -107,3 +107,18 @@ class PerspectiveCamera:
         ])
         apply_P_inv = np.dot(np.linalg.inv(projection_matrix), apply_O_inv)
         return self.transform.apply_to_point(apply_P_inv[:3])
+    
+    def inverse_project_w(self, p):
+        temp = p[1]
+        p[1] = p[2]
+        p[2] = temp
+
+        ortho_matrix = np.array([
+            [2 / (self.right - self.left), 0, 0, - (self.right + self.left) / (self.right - self.left)],
+            [0, 2 / (self.near - self.far), 0, - (self.near + self.far) / (self.near - self.far)],
+            [0, 0, 2 / (self.top - self.bottom), - (self.top + self.bottom) / (self.top - self.bottom)],
+            [0, 0, 0, 1]
+         ])
+        apply_O_inv = np.matmul(np.linalg.inv(ortho_matrix), np.append(p, 1))
+        y =  (self.near * self.far) /((self.near + self.far) -  apply_O_inv[1])
+        return y
