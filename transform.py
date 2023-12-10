@@ -1,13 +1,15 @@
 import numpy as np
 import math
+from scipy.spatial.transform import Rotation
 
 class Transform:
     def __init__(self):
         self.matrix = np.identity(4)
+        self.rotation = Rotation.identity()
 
     def get_position(self):
         return self.matrix[0, 3], self.matrix[1, 3], self.matrix[2, 3]
-    
+
     def transformation_matrix(self):
         return self.matrix
 
@@ -43,6 +45,10 @@ class Transform:
         tempZ[1, 0] = math.sin(math.radians(z))
         tempZ[1, 1] = math.cos(math.radians(z))
         self.matrix = np.matmul(self.matrix, tempZ)
+
+    def set_quaternion_rotation(self, quaternion):
+        self.rotation = Rotation.from_quat(quaternion)
+        self.matrix[:3, :3] = self.rotation.as_matrix()
 
     def inverse_matrix(self):
         return np.linalg.inv(self.matrix)

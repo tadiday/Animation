@@ -1,5 +1,7 @@
 import pygame
 import numpy as np
+from pygame import surfarray
+from PIL import Image
 pygame.init()
 
 class Screen:

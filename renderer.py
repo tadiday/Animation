@@ -1,6 +1,6 @@
 import math
 import numpy as np
-
+from PIL import Image
 
 class Renderer:
     def __init__(self, screen, camera, meshes, light):
@@ -10,7 +10,7 @@ class Renderer:
         self.light = light
 
     
-    def render(self, shading, bg_color, ambient_light):
+    def render(self, shading, bg_color, ambient_light, filename=None):
         # Store Depth from Normalized Device Coordinates
         z_buffer = np.full((self.screen.height, self.screen.width), -np.inf)
         # Create image buffer filled with background color
@@ -161,7 +161,14 @@ class Renderer:
                                     shader = [r,g,b]
 
                                 image_buffer[x, y] = shader
-                                
+        if filename:
+            image_buffer_clamped = np.clip(image_buffer, 0, 1)
+            image_buffer_uint8 = (image_buffer).astype(np.uint8)
+
+            image = Image.fromarray(image_buffer_uint8)
+
+            image.save(filename)
+
         self.screen.draw(image_buffer)
 
 
