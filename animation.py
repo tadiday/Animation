@@ -33,11 +33,12 @@ if __name__ == "__main__":
         np.array([1.0, 1.0, 1.0]),0.05,1.0,0.5,1000)
     mesh2.transform.set_position(4,0,0)
     mesh2.transform.set_rotation(0,0,15)
-    num_frames = 35
-
+    num_frames = 65
+    mesh.load_texture("ocean-seawater-wind-wave-ocean.jpg")
+    mesh2.load_texture("ocean-seawater-wind-wave-ocean.jpg")
     z_rotation_quaternion = None
     j = 0
-    for i in range(num_frames-5):
+    for i in range(num_frames-10):
 
         angle = (i / num_frames) * 2 * np.pi
         quaternion = R.from_euler('xyz', [0,0 , np.degrees(angle)], degrees=True)
@@ -70,7 +71,7 @@ if __name__ == "__main__":
         renderer.render("phong-blinn", [80, 80, 80], [0.2, 0.2, 0.2], filename=f"frame_{j}.png")
         j = j + 1
     for i in range(4):
-        angle = (i / num_frames) * (1/4) * np.pi
+        angle = (i / num_frames) * (1/2) * np.pi
         quaternion = R.from_euler('xyz', [0, np.degrees(angle), 0], degrees=True) * z_rotation_quaternion
 
         mesh.transform.set_quaternion_rotation(np.array((quaternion.as_quat())))
