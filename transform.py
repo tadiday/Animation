@@ -45,7 +45,9 @@ class Transform:
         tempZ[1, 0] = math.sin(math.radians(z))
         tempZ[1, 1] = math.cos(math.radians(z))
         self.matrix = np.matmul(self.matrix, tempZ)
-
+    # quaternion rotation
+    # uses from_quat from scipy library
+    # sets rotation matrix as quat rotation matrix
     def set_quaternion_rotation(self, quaternion):
         self.rotation = Rotation.from_quat(quaternion)
         self.matrix[:3, :3] = self.rotation.as_matrix()

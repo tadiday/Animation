@@ -161,6 +161,8 @@ class Renderer:
                                     shader = [r,g,b]
 
                                 image_buffer[x, y] = shader
+        # if a filename is given, the image is saved
+        # so frames can be used to create video playback
         if filename:
             image_buffer_clamped = np.clip(image_buffer, 0, 1)
             image_buffer_uint8 = (image_buffer).astype(np.uint8)
