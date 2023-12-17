@@ -5,3 +5,7 @@ Using quaternions to produce smooth and accurate motions as interpolations betwe
 
 Results:
 
+
+
+https://github.com/tadiday/Animation/assets/98056179/6e09c673-ee4f-4eb1-a6b3-2cb53e7f23cd
+
